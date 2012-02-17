@@ -1,0 +1,75 @@
+** Heads up **
+There are two ways to use this module:
+1) Using a FacebookSiteConfigMixin
+This means that the credentials used to do the facebook request are saved to the database
+2) using _config.php
+This means the credentials used are stored in your code at mysite/_config.php
+
+I recommend the former so that you can quickly change accounts/apps you're using in different environments.
+So you're dev db has your test facebook wall, whereas your live site has the actual account you want to publish to.
+
+If you decide to use FacebookSiteConfigMixin add the following to mysite/_config.php:
+Object::add_extension('SiteConfig', 'FacebookSiteConfigMixin');
+Object::add_extension('Page', 'FacebookDecorator'); // this could be any Page type
+FacebookDecorator::set_facebook_fields(array('Page' => array('function_that_returns_parameters'))); // same as above
+
+If you decide to use mysite/_config.php
+Object::add_extension('Page', 'FacebookDecorator'); // this could be any Page type
+FacebookDecorator::set_facebook_fields(array('Page' => array('function_that_returns_parameters'))); // same as above
+PostToFacebook::set_facebook_access_token(ACCESS_TOKEN);
+PostToFacebook::set_facebook_app_id(APP_ID);
+PostToFacebook::set_facebook_secret(APP_SECRET);
+PostToFacebook::set_facebook_user_id(USER_ID);
+
+The function that set_facebook_field references needs to return an array like so:
+return array(
+	'name' => $this->owner->Title,
+	'link' => $this->owner->AbsoluteLink(),
+);
+It can also contain
+photo
+caption
+etc
+
+See Facebook developers api reference for more information: https://developers.facebook.com/docs/reference/api/post/
+
+
+** How to use **
+
+Firstly sign up for: http://developers.facebook.com/
+
+Then create an app.
+
+In "Select how your app integrates with Facebook" select "Website" and enter the name of the url the site will exist at.
+
+Upload a icon image so that the post appears on the wall with your branding.
+
+Now you need to copy the app_id and app secret and enter them either in your SiteConfig if you're using the mixin or in mysite/_config if you're not.
+
+In order to publish to a users wall:
+Set user_id as your user_id (see below if you're having trouble finding this)
+Login to your Facebook account
+Set access token to response from this url: (replaced with your app's id and secret)
+https://www.facebook.com/dialog/oauth?client_id=APP_ID&redirect_uri=REDIRECT_URL&scope=publish_stream&response_type=token
+
+In order to publish to a page's wall
+Set user_id as page's id (see below if you're having trouble finding this)
+Make sure you are a page admin
+Login to your Facebook account
+Set access token to response from this url: (replaced with your app's id and secret)
+https://www.facebook.com/dialog/oauth?client_id=APP_ID&redirect_uri=REDIRECT_URL&scope=publish_stream,manage_pages,offline_access&response_type=token
+
+For an overview of the permissions available: http://developers.facebook.com/docs/reference/api/permissions/
+
+This access token will allow your user profile to post to the page's wall as you, not as the page.
+
+In order to post as the page, use the access_token associated with the page in the response from:
+https://graph.facebook.com/me/accounts?access_token=ACCESS_TOKEN_FROMABOVE
+
+** To find your facebook user_id **
+http://www.facebook.com/editprofile.php?sk=picture hover over 'Edit Thumbnail' the id in the url is your user_id
+
+** To find a pages' id **
+Click on 'Use Facebook as a page' under the arrow dropdown on the far right
+Click switch on the page you want to find the id for
+Click 'edit info' at the top, this id in the url is the ID.
