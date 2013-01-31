@@ -1,5 +1,5 @@
 <?php
-class FacebookDecorator extends DataObjectDecorator {
+class FacebookDecorator extends DataExtension {
 
 	public function extraStatics() {
 		return array(
@@ -10,8 +10,8 @@ class FacebookDecorator extends DataObjectDecorator {
 	}
 
 	public function updateCMSFields(&$fields) {
-		$fields->addFieldToTab('Root.Content.SocialMedia', new CheckboxField('PostToFacebook', 'Post to Facebook'));
-		$fields->addFieldToTab('Root.Content.SocialMedia', new ReadonlyField('LastPostedToFacebook', 'Last Posted To Facebook'));
+		$fields->addFieldToTab('Root.SocialMedia', new CheckboxField('PostToFacebook', 'Post to Facebook'));
+		$fields->addFieldToTab('Root.SocialMedia', new ReadonlyField('LastPostedToFacebook', 'Last Posted To Facebook'));
 	}
 
 	public $PostToFacebook = false;
