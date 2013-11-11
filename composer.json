@@ -1,0 +1,11 @@
+{
+	"name": "pitchandtone/silverstripe-facebookpush",
+	"description": "Module for adding push a FB status on page publish",
+	"type": "silverstripe-module",
+	"keywords": ["silverstripe", "facebook"],
+	"authors": [{
+		"name": "John Milmine",
+		"email": "john.milmine@pitchandtone.co.nz"
+	}],
+	"minimum-stability": "dev"
+}
